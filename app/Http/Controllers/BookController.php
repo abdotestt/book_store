@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
@@ -12,41 +13,15 @@ class BookController extends Controller
         $books = Book::all();
         return view('books.index', compact('books'));
     }
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-    
-        // Recherchez les livres dont le titre ou l'auteur correspond à la requête
-        $books = Book::where('title', 'LIKE', "%$query%")
-                     ->orWhere('author', 'LIKE', "%$query%")
-                     ->get();
-    
-        // Retournez la vue avec les résultats de la recherche
-        return view('books.index', compact('books'));
-    }
-
-    // Filtrer les livres par catégorie ou genre
-    public function filter(Request $request)
-    {
-        $category = $request->input('category');
-        $genre = $request->input('genre');
-
-        $books = Book::when($category, function($query, $category) {
-                        return $query->where('category', $category);
-                    })
-                    ->when($genre, function($query, $genre) {
-                        return $query->where('genre', $genre);
-                    })
-                    ->get();
-        return view('books.index', compact('books'));
-    }
+   
     /**
      * Show the form for creating a new resource.
      *
      */
     public function create()
     {
-        return view('create');
+       
+        return view('books.create');
     }
 
     /**
@@ -54,19 +29,32 @@ class BookController extends Controller
      *
      */
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'description' => 'required|string',
-            'genre' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'cover' => 'nullable|string|max:255',
-        ]);
+    {  
+        $validator = Validator::make($request->all(), [
+        'title' => 'required|string|max:255',
+        'author' => 'required|string|max:255',
+        'description' => 'required|string',
+        'genre' => 'required|string|max:255',
+        'category' => 'required|string|max:255',
+        'cover' => 'nullable|string|max:255',
+    ]);
 
-        Book::create($validatedData);
+    if ($validator->fails()) {
+        return redirect()->back()
+                         ->withErrors($validator)
+                         ->withInput();
+    }
 
-        return redirect()->route('index')->with('success', 'Book created successfully.');
+    $book = new Book;
+    $book->title = $request->input('title');
+    $book->author = $request->input('author');
+    $book->description = $request->input('description');
+    $book->genre = $request->input('genre');
+    $book->category = $request->input('category');
+    $book->cover = $request->input('cover');
+    $book->save();
+
+    return redirect()->route('index')->with('success', 'Book created successfully.');
     }
 
   
@@ -77,13 +65,14 @@ class BookController extends Controller
     }
 
  
-    public function edit(Book $book)
+    public function edit( $id)
     {
-        return view('edit', compact('book'));
+        $book = Book::findOrFail($id);
+        return view('books.edit', compact('book'));
     }
 
    
-    public function update(Request $request, Book $book)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
@@ -94,16 +83,17 @@ class BookController extends Controller
             'cover' => 'nullable|string|max:255',
         ]);
 
+        $book = Book::findOrFail($id);
         $book->update($validatedData);
 
-        return redirect()->route('index')->with('success', 'Book updated successfully.');
+        return redirect()->route('books.index')->with('success', 'Book updated successfully.');
     }
 
     
-    public function destroy(Book $book)
+    public function destroy( $id)
     {
+        $book = Book::findOrFail($id);
         $book->delete();
-
-        return redirect()->route('index')->with('success', 'Book deleted successfully.');
+        return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
     }
 }

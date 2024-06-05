@@ -11,7 +11,7 @@
             <h2>BEST BOOK SITE EVER!</h2>
             <!-- <p>LUGX Gaming is free Bootstrap 5 HTML CSS website template for your gaming websites. You can download and use this layout for commercial purposes. Please tell your friends about TemplateMo.</p> -->
             <div class="search-input">
-            <form action="{{ route('books.search') }}" method="GET">
+            <form action="{{ route('books.search') }}" method="POST">
     <input type="text" placeholder="Type Something" id="searchText" name="query" />
     <button type="submit">Search Now</button>
 </form>
