@@ -54,7 +54,7 @@ class BookController extends Controller
     $book->cover = $request->input('cover');
     $book->save();
 
-    return redirect()->route('index')->with('success', 'Book created successfully.');
+    return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
 
   

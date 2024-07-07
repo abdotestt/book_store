@@ -40,16 +40,31 @@
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
                     <a href="index.html" class="logo">
-                        <img src="assets/images/logo.png" alt="" style="width: 158px;">
+                        <img src="assets/images/book.png" alt="" style="width: 158px;margin-top:-40px">
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                       <li><a href="index.html" class="active">Home</a></li>
                       <li><a href="{{route("books.index")}}">Or books</a></li>
-                      <li><a href="product-details.html">Product Details</a></li>
+                      <li><a href="{{route('carts.index')}}">My cart</a></li>
                       <li><a href="contact.html">Contact Us</a></li>
-                      <li><a href="#">Sign In</a></li>
+                      @if (Auth()->user())
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                      <div class="btn btn-danger text-dark">
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>   
+                        </div>
+                        </form>
+                     
+                        @else
+                                  <li><a href="{{ route('register') }}">Sign In or Sing Up</a></li>
+                        @endif
+
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>

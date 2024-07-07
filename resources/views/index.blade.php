@@ -9,12 +9,12 @@
           <div class="caption header-text">
             <h6>Welcome to MorBooks</h6>
             <h2>BEST BOOK SITE EVER!</h2>
-            <!-- <p>LUGX Gaming is free Bootstrap 5 HTML CSS website template for your gaming websites. You can download and use this layout for commercial purposes. Please tell your friends about TemplateMo.</p> -->
             <div class="search-input">
-            <form action="{{ route('books.search') }}" method="POST">
-    <input type="text" placeholder="Type Something" id="searchText" name="query" />
-    <button type="submit">Search Now</button>
-</form>
+            <form action="{{ route('books.search') }}" class="mf" method="POST">
+                  @csrf
+                      <input type="text" class="minp" placeholder="Type Author or Title" id="searchText" name="query" />
+                      <button type="submit" class="btnn">Search Now</button>
+              </form>
 
             </div>
           </div>

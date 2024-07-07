@@ -62,7 +62,7 @@
               <b class="down-content">
                 <span class="category">{{$book->category}}</span>
                 <h4 class="ml-3">{{$book->title}}</h4>
-                <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a><br>
+                <a href="{{ route('books.show', $book->id) }}"><i class="fa fa-shopping-bag"></i></a><br>
               
               
               </b>
